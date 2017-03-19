@@ -1,11 +1,9 @@
-# Train a single layer neural network ( CNN ) using sequence.
-# Impementation: tensorflow v. 0.11
-
+# Implementing Queing/Streaming in tensorflow to scan the whole genome.
+# Tensorflow v 1.0
 import sys
 import tensorflow as tf
 import numpy as np
 import read
-# from sklearn.model_selection import train_test_split
 
 def read_single_example(filename, record_defaults):
     # construct a queue for all the files.
