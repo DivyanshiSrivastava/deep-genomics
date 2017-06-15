@@ -61,3 +61,6 @@ roc_auc = sklearn.metrics.roc_auc_score(y_test, probas)
 prc = sklearn.metrics.average_precision_score(y_test, probas)
 print "test roc", roc_auc
 print "test prc", prc
+
+# saving model
+model.save("conv3L_model.h5py")
