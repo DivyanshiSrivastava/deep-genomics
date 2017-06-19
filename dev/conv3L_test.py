@@ -13,8 +13,8 @@ import numpy as np
 import sklearn.metrics
 import sys
 
-def test(X_test):
-    probas = model.predict_on_batch(X_test)
+def test(X_test,acc_test):
+    probas = model.predict_on_batch([X_test,acc_test])
     return probas
 
 def map_bases(line):
@@ -29,6 +29,7 @@ model = load_model("conv3L_model.h5py")
 feature_dict = { 'A' : [1, 0, 0, 0], 'T' : [0,1,0,0], 'G' : [0,0,1,0],'C' : [0,0,0, 1], 'N': [0,0,0,0]}
 n = 5000
 
+acc = np.loadtxt(sys.argv[1] + ".acc")
 # iterate over test
 lc = 0
 with open(sys.argv[1] + ".seq", "r") as f:
@@ -40,11 +41,17 @@ with open(sys.argv[1] + ".seq", "r") as f:
             chunk = [map_bases(x) for x in chunk]
             x = np.array(chunk)
             x_rs = np.reshape(x,(-1,200,4))
+            print n*(lc-1),n*lc
+            if (n*lc) < len(acc):
+		acc_curr = acc[n*(lc-1):(n*lc)]
+            else:
+                acc_curr = acc[n*(lc-1):]
+            print len(acc_curr)
             try:
-                hold = np.ravel(np.array(test(x_rs)))
+                hold = np.ravel(np.array(test(x_rs,acc_curr)))
                 probas = np.hstack((probas, hold))
             except:
-                probas = np.ravel(np.array(test(x_rs)))
+                probas = np.ravel(np.array(test(x_rs,acc_curr)))
 	if not chunk:
             break
 
