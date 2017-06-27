@@ -1,0 +1,24 @@
+# sequence only
+
+test roc 0.987017424463
+test prc 0.480137106464
+[[3264682   97906]
+ [   1382   12107]]
+test roc 0.97256412921
+test prc 0.586711949574
+[[3262982   93518]
+ [   3082   16495]]
+
+
+# DNase Tag Counts + Domain Calls ( merge at last layer/ like logistic)
+
+test roc 0.985239870869
+test prc 0.626208124685
+[[3199065  159662]
+ [   1370   15980]]
+test roc 0.985158379642
+test prc 0.705815596718
+[[3198823  157677]
+ [   1612   17965]]
+
+

@@ -13,8 +13,8 @@ import numpy as np
 import sklearn.metrics
 import sys
 
-def test(X_test,acc_test):
-    probas = model.predict_on_batch([X_test,acc_test])
+def test(X_test):
+    probas = model.predict_on_batch(X_test)
     return probas
 
 def map_bases(line):
@@ -25,11 +25,10 @@ def map_bases(line):
 
 # load model 
 
-model = load_model("conv3L_model.h5py")
+model = load_model(sys.argv[2])
 feature_dict = { 'A' : [1, 0, 0, 0], 'T' : [0,1,0,0], 'G' : [0,0,1,0],'C' : [0,0,0, 1], 'N': [0,0,0,0]}
 n = 5000
 
-acc = np.loadtxt(sys.argv[1] + ".acc")
 # iterate over test
 lc = 0
 with open(sys.argv[1] + ".seq", "r") as f:
@@ -42,27 +41,32 @@ with open(sys.argv[1] + ".seq", "r") as f:
             x = np.array(chunk)
             x_rs = np.reshape(x,(-1,200,4))
             print n*(lc-1),n*lc
-            if (n*lc) < len(acc):
-		acc_curr = acc[n*(lc-1):(n*lc)]
-            else:
-                acc_curr = acc[n*(lc-1):]
-            print len(acc_curr)
             try:
-                hold = np.ravel(np.array(test(x_rs,acc_curr)))
+                hold = np.ravel(np.array(test(x_rs)))
                 probas = np.hstack((probas, hold))
             except:
-                probas = np.ravel(np.array(test(x_rs,acc_curr)))
+                probas = np.ravel(np.array(test(x_rs)))
 	if not chunk:
             break
 
-y_test = np.loadtxt((sys.argv[1] + ".labels"))
+np.savetxt(sys.argv[1] + "probas.txt", probas)
+y_testn = np.loadtxt((sys.argv[1]+ ".labels"))
+y_testb = np.loadtxt((sys.argv[1] + ".broadlabels"))
 threshold = lambda t: 1 if t >= 0.5 else 0 
 npthresh = np.vectorize(threshold)
 y_pred = npthresh(probas)
 
 # measure performance
-roc_auc = sklearn.metrics.roc_auc_score(y_test, probas)
-prc = sklearn.metrics.average_precision_score(y_test, probas)
-print "test roc", roc_auc
-print "test prc", prc
-print sklearn.metrics.confusion_matrix(y_test, y_pred)
+roc_auc_n = sklearn.metrics.roc_auc_score(y_testn, probas)
+prc_n = sklearn.metrics.average_precision_score(y_testn, probas)
+print "test roc", roc_auc_n
+print "test prc", prc_n
+print sklearn.metrics.confusion_matrix(y_testn, y_pred)
+
+# measure performance
+roc_auc_b = sklearn.metrics.roc_auc_score(y_testb, probas)
+prc_b = sklearn.metrics.average_precision_score(y_testb, probas)
+print "test roc", roc_auc_b
+print "test prc", prc_b
+print sklearn.metrics.confusion_matrix(y_testb, y_pred)
+
