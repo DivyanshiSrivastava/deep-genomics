@@ -55,7 +55,7 @@ with open(sys.argv[1] + ".seq", "r") as f:
 	if not chunk:
             break
 
-np.savetxt(sys.argv[1] + "probas.txt", probas)
+#np.savetxt(sys.argv[1] + "probas.txt", probas)
 y_testn = np.loadtxt((sys.argv[1]+ ".labels"))
 y_testb = np.loadtxt((sys.argv[1] + ".broadlabels"))
 threshold = lambda t: 1 if t >= 0.5 else 0 

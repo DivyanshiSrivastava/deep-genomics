@@ -1,5 +1,5 @@
 from keras.models import Model
-from keras.layers import Dense, Dropout, Activation, Flatten, concatenate, Input
+from keras.layers import Dense, Dropout, Activation, Flatten, concatenate, Input, LSTM
 from keras.layers import Conv1D, MaxPooling1D
 from keras.optimizers import SGD, Adagrad, Adam
 from keras.callbacks import EarlyStopping
@@ -14,11 +14,13 @@ import sys
 def keras_graphmodel():
     
     seq_input = Input(shape = (n,4,), name = 'seq')
-    xs = Conv1D(64, 20, padding="same")(seq_input)
+    xs = Conv1D(264, 25, padding="same")(seq_input)
     xs = Activation('relu')(xs)
-    xs = MaxPooling1D(padding="same", strides=None, pool_size=200)(xs)
-    xs = Flatten()(xs)
-    xs = Dense(512, activation = 'relu')(xs)
+    xs = MaxPooling1D(padding="same", strides=15, pool_size=15)(xs)
+    xs = LSTM(128)(xs)
+    print xs.shape
+    #xs = Flatten()(xs)
+    xs = Dense(1024, activation = 'relu')(xs)
     xs = Dropout(0.5)(xs)
     xs = Dense(24,activation= 'sigmoid')(xs)
  

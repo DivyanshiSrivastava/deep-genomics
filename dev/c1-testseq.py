@@ -49,10 +49,10 @@ with open(sys.argv[1] + ".seq", "r") as f:
 	if not chunk:
             break
 
-np.savetxt(sys.argv[1] + "probas.txt", probas)
+np.savetxt(sys.argv[1] + "seq.probas.txt", probas)
 y_testn = np.loadtxt((sys.argv[1]+ ".labels"))
 y_testb = np.loadtxt((sys.argv[1] + ".broadlabels"))
-threshold = lambda t: 1 if t >= 0.5 else 0 
+threshold = lambda t: 1 if t >= 0.5 else 0
 npthresh = np.vectorize(threshold)
 y_pred = npthresh(probas)
 
@@ -69,4 +69,3 @@ prc_b = sklearn.metrics.average_precision_score(y_testb, probas)
 print "test roc", roc_auc_b
 print "test prc", prc_b
 print sklearn.metrics.confusion_matrix(y_testb, y_pred)
-
